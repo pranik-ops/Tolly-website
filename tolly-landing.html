@@ -1,0 +1,640 @@
+<title>Tolly — A Companion Built for Parents</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-clay: #B08968;
+  --color-clay-deep: #96745A;
+  --color-sage: #7DA08E;
+  --color-sage-soft: #A9C4B6;
+  --color-blue: #7B9DB0;
+  --color-blush: #E3B8A6;
+  --color-warm: #FCFAF6;
+  --color-warm-tint: #F6F1E9;
+  --color-card: #FFFFFF;
+  --color-text: #3A3530;
+  --color-light-text: #756E64;
+  --color-divider: #E4DCCC;
+
+  --font-serif: 'Fraunces', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --spacing-xs: 0.75rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4.5rem;
+
+  --shadow-soft: 0 8px 30px rgba(58, 53, 48, 0.06);
+  --shadow-card: 0 4px 18px rgba(58, 53, 48, 0.07);
+  --radius-lg: 24px;
+  --radius-md: 14px;
+  --radius-sm: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-warm: #24211C;
+    --color-warm-tint: #2B2721;
+    --color-card: #2E2A24;
+    --color-text: #EFE9DE;
+    --color-light-text: #B7AE9F;
+    --color-divider: #423C32;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-warm: #24211C;
+  --color-warm-tint: #2B2721;
+  --color-card: #2E2A24;
+  --color-text: #EFE9DE;
+  --color-light-text: #B7AE9F;
+  --color-divider: #423C32;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-text);
+  background: var(--color-warm);
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.25rem;
+  color: var(--color-clay-deep);
+}
+
+h1 { font-size: clamp(2.25rem, 5.5vw, 3.75rem); font-weight: 600; }
+h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+h3 { font-size: 1.15rem; font-weight: 600; }
+
+p { margin-bottom: 1rem; color: var(--color-text); max-width: 62ch; }
+a { color: var(--color-clay-deep); text-decoration: none; }
+a:hover { text-decoration: underline; }
+button { font-family: var(--font-sans); }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+.section { padding: var(--spacing-2xl) 0; position: relative; }
+.section-tint { background: var(--color-warm-tint); }
+
+/* Nav */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(252, 250, 246, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-divider);
+}
+:root[data-theme="dark"] .nav, @media (prefers-color-scheme: dark) { }
+.nav-inner {
+  max-width: 1180px; margin: 0 auto; padding: 1rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand { display: flex; align-items: center; gap: 0.6rem; }
+.brand-mark { width: 34px; height: 34px; flex-shrink: 0; }
+.brand-name {
+  font-family: var(--font-serif); font-size: 1.35rem; font-weight: 600;
+  color: var(--color-clay-deep);
+}
+.nav-cta {
+  background: var(--color-clay-deep); color: var(--color-warm);
+  border: none; padding: 0.6rem 1.3rem; border-radius: 999px;
+  font-size: 0.92rem; font-weight: 600; cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+
+/* Decorative blobs */
+.blob-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.blob { position: absolute; filter: blur(2px); opacity: 0.55; animation: float 14s ease-in-out infinite; }
+.blob.b2 { animation-delay: -4s; animation-duration: 18s; }
+.blob.b3 { animation-delay: -9s; animation-duration: 16s; }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(14px, -18px) scale(1.04); }
+}
+
+/* Hero */
+.hero { padding-top: var(--spacing-xl); padding-bottom: var(--spacing-2xl); position: relative; z-index: 1; }
+.hero-grid {
+  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--spacing-2xl);
+  align-items: center;
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--color-sage); background: rgba(125, 160, 142, 0.12);
+  padding: 0.4rem 0.85rem; border-radius: 999px; margin-bottom: 1.25rem;
+}
+.hero-content .subhead {
+  font-size: 1.15rem; line-height: 1.75; color: var(--color-light-text);
+  margin-bottom: var(--spacing-lg); max-width: 52ch;
+}
+.hero-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+.cta-button {
+  background: var(--color-clay-deep); color: var(--color-warm);
+  border: none; padding: 0.95rem 2.1rem; font-size: 1rem; border-radius: 999px;
+  cursor: pointer; font-weight: 600; transition: all 0.25s ease;
+  display: inline-block; box-shadow: var(--shadow-card);
+}
+.cta-button:hover { background: var(--color-sage); transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+.cta-secondary { background: var(--color-sage); }
+.trust-text { font-size: 0.85rem; color: var(--color-light-text); margin-top: 1rem; max-width: 40ch; }
+
+.hero-visual { position: relative; display: flex; align-items: center; justify-content: center; height: 420px; }
+.hero-orb {
+  position: absolute; width: 320px; height: 320px; border-radius: 50%;
+  background: var(--color-blush);
+  box-shadow: var(--shadow-soft);
+  animation: orb-pulse 5s ease-in-out infinite;
+}
+@keyframes orb-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.035); opacity: 0.93; }
+}
+.hero-mascot { position: relative; z-index: 1; width: 260px; height: 260px; animation: bob 6s ease-in-out infinite; }
+@keyframes bob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-9px) scale(1.018); }
+}
+.eyes { animation: blink 4.6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  94%, 96% { transform: scaleY(0.08); }
+}
+.wave { animation: wavepulse 3.6s ease-in-out infinite; transform-origin: center; opacity: 0.5; }
+.wave.w2 { animation-delay: 0.5s; }
+@keyframes wavepulse { 0%, 100% { opacity: 0.25; transform: scale(0.92); } 50% { opacity: 0.7; transform: scale(1); } }
+
+/* Reveal on scroll */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+}
+
+/* Problem */
+.problem { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--spacing-2xl); align-items: center; }
+.problem-content h2 { margin-bottom: 1.5rem; }
+.closing-line {
+  margin-top: var(--spacing-lg); font-style: italic; color: var(--color-light-text);
+  border-left: 3px solid var(--color-clay); padding-left: var(--spacing-md);
+}
+.problem-card {
+  background: var(--color-card); border-radius: var(--radius-lg); padding: var(--spacing-xl);
+  box-shadow: var(--shadow-card); text-align: center;
+}
+.problem-card svg { width: 100%; max-width: 220px; margin: 0 auto 1.25rem; display: block; }
+.problem-card p { margin: 0; color: var(--color-light-text); font-family: var(--font-serif); font-size: 1.2rem; line-height: 1.6; max-width: none; }
+
+/* Pillars / grid cards */
+.section-head { max-width: 680px; margin-bottom: var(--spacing-xl); }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--spacing-lg); }
+.card {
+  background: var(--color-card); border-radius: var(--radius-md); padding: var(--spacing-lg);
+  box-shadow: var(--shadow-card); transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); }
+.card-icon {
+  width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  background: rgba(125, 160, 142, 0.14); margin-bottom: 1rem;
+}
+.card-icon svg { width: 24px; height: 24px; }
+.card p { margin: 0; font-size: 0.97rem; }
+
+/* Trust */
+.trust-panel {
+  background: linear-gradient(135deg, rgba(125,160,142,0.10), rgba(176,137,104,0.08));
+  border-radius: var(--radius-lg); padding: var(--spacing-xl); border: 1px solid var(--color-divider);
+}
+.trust-panel h2 { color: var(--color-sage); }
+.trust-markers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg); }
+.trust-marker { display: flex; align-items: flex-start; gap: 0.85rem; }
+.trust-marker-check {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--color-sage);
+  color: var(--color-warm); display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+}
+.trust-marker p { margin: 0; font-weight: 500; }
+
+/* Control */
+.control-points { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--spacing-xl); margin-top: var(--spacing-xl); }
+.control-point .num {
+  display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+  border-radius: 50%; background: rgba(176, 137, 104, 0.14); color: var(--color-clay-deep);
+  font-family: var(--font-serif); font-weight: 600; margin-bottom: 0.85rem;
+}
+.control-point p { margin: 0; font-size: 0.95rem; }
+
+/* Founder */
+.founder-wrap { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-xl); align-items: center; }
+.founder-avatar {
+  width: 110px; height: 110px; border-radius: 50%; flex-shrink: 0;
+  background: var(--color-sage);
+  display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-card);
+}
+.founder-avatar svg { width: 46px; height: 46px; }
+.founder-story h2 { color: var(--color-sage); }
+.founder-story p { font-size: 1.02rem; line-height: 1.8; }
+.founder-name { font-weight: 600; color: var(--color-text); }
+
+/* Coming soon */
+.coming-soon { text-align: center; }
+.coming-soon .wrap { max-width: 720px; }
+.coming-soon p { margin-left: auto; margin-right: auto; }
+
+/* Waitlist */
+.waitlist-card {
+  max-width: 640px; margin: 0 auto; background: var(--color-card); border-radius: var(--radius-lg);
+  padding: var(--spacing-xl); box-shadow: var(--shadow-soft);
+}
+.waitlist-card h2, .waitlist-card .subhead { text-align: center; }
+.waitlist-card .subhead { color: var(--color-light-text); margin: 0 auto var(--spacing-xl); max-width: 40ch; }
+.form-group { margin-bottom: var(--spacing-md); }
+.form-group label { display: block; margin-bottom: 0.45rem; font-weight: 600; font-size: 0.9rem; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 0.8rem 0.95rem; font-family: var(--font-sans);
+  border: 1.5px solid var(--color-divider); border-radius: var(--radius-sm);
+  background: var(--color-warm); color: var(--color-text); font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--color-clay); box-shadow: 0 0 0 3px rgba(176, 137, 104, 0.14);
+}
+.form-group textarea { resize: vertical; min-height: 84px; }
+.form-submit { width: 100%; margin-top: var(--spacing-sm); }
+.form-reassurance { text-align: center; margin-top: 0.9rem; font-size: 0.83rem; color: var(--color-light-text); }
+.form-status { text-align: center; margin-top: 0.9rem; font-size: 0.9rem; font-weight: 600; color: var(--color-sage); display: none; }
+
+/* FAQ */
+.faq-section .wrap { max-width: 800px; }
+.faq-item { border-bottom: 1px solid var(--color-divider); }
+.faq-item:last-child { border-bottom: none; }
+.faq-q {
+  width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1.25rem 0; font-family: var(--font-serif); font-size: 1.05rem; font-weight: 600;
+  color: var(--color-clay-deep);
+}
+.faq-q .chev { flex-shrink: 0; transition: transform 0.25s ease; color: var(--color-sage); }
+.faq-item[open] .faq-q .chev { transform: rotate(180deg); }
+.faq-a { padding: 0 0 1.5rem; margin: 0; color: var(--color-light-text); }
+.faq-item summary::-webkit-details-marker { display: none; }
+
+/* Footer */
+footer { background: var(--color-warm-tint); border-top: 1px solid var(--color-divider); padding: var(--spacing-xl) 0; }
+.footer-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-xl); margin-bottom: var(--spacing-xl); }
+.footer-section h4 { font-family: var(--font-serif); margin-bottom: 0.75rem; font-size: 1.05rem; color: var(--color-clay-deep); }
+.footer-section p { font-size: 0.9rem; margin: 0 0 0.5rem 0; color: var(--color-light-text); }
+.footer-section a { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
+.footer-bottom { border-top: 1px solid var(--color-divider); padding-top: var(--spacing-lg); text-align: center; font-size: 0.85rem; color: var(--color-light-text); }
+.tagline { font-style: italic; margin-top: 0.5rem; }
+.legal-note { margin-top: 0.75rem; }
+
+/* Responsive */
+@media (max-width: 820px) {
+  .hero-grid, .problem, .founder-wrap { grid-template-columns: 1fr; }
+  .hero-visual { height: 280px; order: -1; }
+  .hero-orb { width: 220px; height: 220px; }
+  .hero-mascot { width: 170px; height: 170px; }
+  .section { padding: var(--spacing-xl) 0; }
+  .founder-avatar { width: 84px; height: 84px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+</style>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#7DA08E" d="M20,1.5 C29,1 37,8.5 37.5,18.5 C38,28.5 30.5,37.5 20.5,38 C11.5,38.5 2,31.5 1.5,21 C1,11 11,2 20,1.5 Z"/>
+        <ellipse cx="15.5" cy="20.5" rx="2.3" ry="4.6" fill="#FCFAF6"/>
+        <ellipse cx="24.5" cy="20.5" rx="2.3" ry="4.6" fill="#FCFAF6"/>
+      </svg>
+      <span class="brand-name">Tolly</span>
+    </div>
+    <button class="nav-cta" onclick="document.querySelector('.waitlist-anchor').scrollIntoView({behavior:'smooth'})">Join the waitlist</button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="section hero">
+  <div class="blob-field">
+    <svg class="blob b1" width="260" height="260" style="top:-60px; left:-80px;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#A9C4B6" d="M45,-58.6C56.9,-49.3,64,-33.8,66.8,-17.8C69.7,-1.8,68.3,14.7,60.8,27.7C53.3,40.7,39.7,50.2,24.7,56.6C9.7,63,-6.8,66.4,-22.1,63C-37.4,59.7,-51.6,49.6,-59.5,36C-67.5,22.4,-69.2,5.2,-65.6,-10.5C-61.9,-26.2,-52.9,-40.3,-40.3,-49.6C-27.7,-58.9,-13.8,-63.3,1.7,-65.5C17.3,-67.7,34.6,-67.6,45,-58.6Z" transform="translate(100 100)"/></svg>
+    <svg class="blob b2" width="220" height="220" style="top:120px; right:-70px;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#E3B8A6" d="M42.6,-54.6C53.9,-45.2,60.7,-30.5,63.5,-15.1C66.4,0.3,65.3,16.4,58.1,29.6C50.9,42.8,37.6,53.1,22.6,59.1C7.6,65.1,-9.1,66.8,-24.4,62.1C-39.7,57.4,-53.6,46.3,-61.2,32C-68.8,17.7,-70.1,0.2,-65.9,-15.4C-61.7,-31,-52,-44.7,-39.5,-53.9C-27,-63.1,-13.5,-67.8,1.1,-69.2C15.6,-70.6,31.3,-64,42.6,-54.6Z" transform="translate(100 100)"/></svg>
+    <svg class="blob b3" width="180" height="180" style="bottom:-40px; left:35%;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#F3E4D8" d="M47.2,-58.1C60.6,-48.3,70.3,-32.9,72.9,-16.6C75.4,-0.3,70.7,17,60.9,30.7C51.1,44.4,36.2,54.6,19.8,60.7C3.4,66.8,-14.5,68.8,-30.1,63.3C-45.7,57.8,-59,44.8,-66.1,29.1C-73.2,13.4,-74.2,-4.9,-68.4,-20.5C-62.6,-36.1,-50,-49,-35.7,-58.6C-21.4,-68.2,-10.7,-74.5,3.5,-79.1C17.7,-83.7,35.8,-67.9,47.2,-58.1Z" transform="translate(100 100)" opacity="0.6"/></svg>
+  </div>
+
+  <div class="wrap hero-grid">
+    <div class="hero-content reveal">
+      <div class="eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v5a5 5 0 0010 0V7a5 5 0 00-5-5z" stroke="currentColor" stroke-width="2"/><path d="M19 11a7 7 0 01-14 0M12 18v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Screen-free &amp; voice-only
+      </div>
+      <h1>Tolly, the friendly one.</h1>
+      <p class="subhead">Tolly listens, shares, and explores alongside your child — an interactive companion built with parents, for parents, to extend your gentle presence into the moments you can't be there.</p>
+      <div class="hero-actions">
+        <button class="cta-button" onclick="document.querySelector('.waitlist-anchor').scrollIntoView({behavior:'smooth'})">Join the waitlist</button>
+      </div>
+      <p class="trust-text">Built by a parent. Shaped with child psychologists and educators. Designed so you're always the one in charge.</p>
+    </div>
+
+    <div class="hero-visual reveal">
+      <div class="hero-orb"></div>
+      <svg class="hero-mascot" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Tolly, a playful, present companion">
+        <path fill="#7DA08E" d="M100,32 C143,30 176,60 178,101 C180,142 148,174 104,176 C62,178 26,150 24,107 C22,64 57,34 100,32 Z"/>
+        <g class="eyes">
+          <ellipse cx="77" cy="103" rx="7.5" ry="16" fill="#FCFAF6"/>
+          <ellipse cx="123" cy="103" rx="7.5" ry="16" fill="#FCFAF6"/>
+        </g>
+        <g stroke="#B08968" stroke-width="4" stroke-linecap="round" opacity="0.75">
+          <path class="wave w1" d="M36 103 q-10 6 0 12" />
+          <path class="wave w2" d="M26 96 q-20 13 0 26" />
+        </g>
+        <g stroke="#B08968" stroke-width="4" stroke-linecap="round" opacity="0.75">
+          <path class="wave w1" d="M164 103 q10 6 0 12" />
+          <path class="wave w2" d="M174 96 q20 13 0 26" />
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="section">
+  <div class="wrap problem">
+    <div class="problem-content reveal">
+      <h2>You want to be there for every moment. Life doesn't always allow it.</h2>
+      <p>Between work, errands, and everything else, there are hours in your child's day when you simply can't be with them fully. Tolly offers gentle companionship and learning to fill that gap — no screen time, no overstimulation, no forced learning.</p>
+      <p class="closing-line">Your child explores their world through every waking hour — your schedule shouldn't have to limit it.</p>
+    </div>
+    <div class="problem-card reveal">
+      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 90 Q 55 20 100 90 T 190 90" stroke="#A9C4B6" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle cx="55" cy="45" r="6" fill="#B08968"/>
+        <circle cx="145" cy="45" r="6" fill="#E3B8A6"/>
+        <circle cx="100" cy="90" r="6" fill="#7DA08E"/>
+      </svg>
+      <p>Being present, even when&nbsp;you're&nbsp;away.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Meet Tolly -->
+<section class="section section-tint">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>A companion that truly listens.</h2>
+      <p>Tolly sits with your child and talks with them — no screen, no swiping, just conversation. It notices how they're feeling and responds with warmth, the way you would. It carries your values and your way of parenting into the moments you're not there, and it never replaces you — it simply holds your place until you're back.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card reveal">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7DA08E" stroke-width="2" stroke-linecap="round"><path d="M3 14a9 9 0 0118 0"/><path d="M21 14v4a2 2 0 01-2 2h-1v-6h3zM3 14v4a2 2 0 002 2h1v-6H3z"/></svg>
+        </div>
+        <h3>Listens, doesn't lecture</h3>
+        <p>Tolly meets your child where they are, emotionally, and responds accordingly.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#B08968" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 000-7.8z"/></svg>
+        </div>
+        <h3>An extension of you</h3>
+        <p>It reflects the values and boundaries you set for your family.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7DA08E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 019.8 6.1C15.5 5 17 3 17 3s.5 3.5-2 6c4.6-.3 6-3.5 6-3.5S23.9 12.7 21 16"/></svg>
+        </div>
+        <h3>Screen-free, always</h3>
+        <p>Just voice — calm, simple, and built for young minds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust -->
+<section class="section">
+  <div class="wrap">
+    <div class="trust-panel reveal">
+      <h2>Safety isn't a feature we added. It's why Tolly exists.</h2>
+      <p>Tolly was designed from day one with child psychologists, educators, and parents — not bolted together and made safe afterward. No screens means no overstimulation and nothing addictive by design. Every conversation is shaped by safeguards built into the product itself, and you decide where the boundaries are.</p>
+
+      <div class="trust-markers">
+        <div class="trust-marker"><div class="trust-marker-check">✓</div><p>Screen-free by design</p></div>
+        <div class="trust-marker"><div class="trust-marker-check">✓</div><p>Developed with child development experts</p></div>
+        <div class="trust-marker"><div class="trust-marker-check">✓</div><p>Parent-set boundaries, always</p></div>
+        <div class="trust-marker"><div class="trust-marker-check">✓</div><p>Built for young children first</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Control -->
+<section class="section section-tint">
+  <div class="wrap">
+    <div class="reveal">
+      <h2>You're always in the driver's seat.</h2>
+      <p>Tolly follows your lead — not the other way around. You decide how Tolly responds to the things that matter to your family. You stay in the loop on your child's day, and you can step in, adjust, or turn things off at any time. Tolly is designed to extend your parenting, never override it.</p>
+    </div>
+
+    <div class="control-points">
+      <div class="control-point reveal"><div class="num">1</div><h3>You set the tone</h3><p>Guide how Tolly responds to the situations you care about.</p></div>
+      <div class="control-point reveal"><div class="num">2</div><h3>You stay informed</h3><p>Get a clear picture of your child's day, on your terms.</p></div>
+      <div class="control-point reveal"><div class="num">3</div><h3>You're in control</h3><p>Adjust, pause, or turn Tolly off, any time.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Founder Story -->
+<section class="section">
+  <div class="wrap founder-wrap">
+    <div class="founder-avatar reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FCFAF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 000-7.8z"/></svg>
+    </div>
+    <div class="founder-story reveal">
+      <h2>Built by a parent who's lived the problem.</h2>
+      <p>Tolly started with a simple, personal frustration: wanting to be more present for her own children during the hours she couldn't be. <span class="founder-name">Founder Aditi Yadav</span> brings both an engineering background and lived parenting experience, and she's built Tolly alongside a small team of educators, child psychologists, and technologists who share the same goal — helping children feel supported, and helping parents feel present, even from a distance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Coming Soon -->
+<section class="section section-tint coming-soon">
+  <div class="wrap reveal">
+    <h2>Something new is coming.</h2>
+    <p>Tolly is in early hands right now, and every conversation with a family is shaping what comes next. We're not rushing it, because your child deserves something built with care, not shipped fast. If that sounds like the kind of thing your family would want to be part of early, we'd love to have you on the list.</p>
+    <button class="cta-button cta-secondary" onclick="document.querySelector('.waitlist-anchor').scrollIntoView({behavior:'smooth'})">Get early access</button>
+  </div>
+</section>
+
+<!-- Waitlist Form -->
+<section class="section waitlist-anchor">
+  <div class="wrap">
+    <div class="waitlist-card reveal">
+      <h2>Be there for your child, even when you're not.</h2>
+      <p class="subhead">Join the families getting early access to Tolly.</p>
+
+      <form id="waitlist-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="parent-name">Parent's name</label>
+          <input type="text" id="parent-name" name="parentName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="child-age">Child's age</label>
+          <select id="child-age" name="childAge" required>
+            <option value="">Select age</option>
+            <option value="3">3 years old</option>
+            <option value="4">4 years old</option>
+            <option value="5">5 years old</option>
+            <option value="6">6 years old</option>
+            <option value="7">7 years old</option>
+            <option value="8">8 years old</option>
+            <option value="9">9 years old</option>
+            <option value="10">10 years old</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="what-matters">What matters most to you as a parent? (optional)</label>
+          <textarea id="what-matters" name="whatMatters" placeholder="Share your thoughts..."></textarea>
+        </div>
+
+        <button type="submit" class="cta-button form-submit">Join the waitlist</button>
+        <p class="form-reassurance">No spam. No screens. Just a note when it's your turn.</p>
+        <p class="form-status" id="form-status">Thank you — you're on the list! We'll be in touch soon.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQs -->
+<section class="section section-tint faq-section">
+  <div class="wrap">
+    <h2 class="reveal">Frequently asked questions</h2>
+
+    <details class="faq-item reveal" open>
+      <summary class="faq-q">What age is Tolly for?
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <p class="faq-a">Tolly is designed for children roughly 3 to 10, and adapts as your child grows.</p>
+    </details>
+
+    <details class="faq-item reveal">
+      <summary class="faq-q">Is it a screen?
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <p class="faq-a">No. Tolly is voice-only, on purpose — no screen, ever.</p>
+    </details>
+
+    <details class="faq-item reveal">
+      <summary class="faq-q">Will it replace me as a parent?
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <p class="faq-a">No. Tolly is built to extend your presence, not replace it. You always set the direction and deliver your guidance.</p>
+    </details>
+
+    <details class="faq-item reveal">
+      <summary class="faq-q">Is my child's data safe?
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <p class="faq-a">Safety and privacy are foundational to how Tolly is built. We'll share full details as we get closer to launch.</p>
+    </details>
+
+    <details class="faq-item reveal">
+      <summary class="faq-q">How much will it cost / when can I get it?
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <p class="faq-a">We're still in early development. Join the waitlist and you'll be the first to know as things take shape.</p>
+    </details>
+
+    <details class="faq-item reveal">
+      <summary class="faq-q">What can Tolly actually do?
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <p class="faq-a">Tolly listens, talks, and explores the world alongside your child — we're keeping the details under wraps while we refine the experience with early families. You'll see more as we get closer to launch.</p>
+    </details>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-section">
+        <div class="brand" style="margin-bottom: 0.5rem;">
+          <svg class="brand-mark" width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#7DA08E" d="M20,1.5 C29,1 37,8.5 37.5,18.5 C38,28.5 30.5,37.5 20.5,38 C11.5,38.5 2,31.5 1.5,21 C1,11 11,2 20,1.5 Z"/>
+            <ellipse cx="15.5" cy="20.5" rx="2.3" ry="4.6" fill="#FCFAF6"/>
+            <ellipse cx="24.5" cy="20.5" rx="2.3" ry="4.6" fill="#FCFAF6"/>
+          </svg>
+          <span class="brand-name">Tolly</span>
+        </div>
+        <p class="tagline">Your child's companion, on your terms.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Links</h4>
+        <a href="#" onclick="document.querySelector('.waitlist-anchor').scrollIntoView({behavior:'smooth'}); return false;">Join waitlist</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p><a href="mailto:hello@hellotolly.app">hello@hellotolly.app</a></p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Tolly. All rights reserved.</p>
+      <p class="legal-note">Tolly is in development. Features and availability are subject to change.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+function handleSubmit(event) {
+  event.preventDefault();
+  const formData = {
+    parentName: document.getElementById('parent-name').value,
+    email: document.getElementById('email').value,
+    childAge: document.getElementById('child-age').value,
+    whatMatters: document.getElementById('what-matters').value,
+  };
+  console.log('Waitlist signup:', formData);
+  const status = document.getElementById('form-status');
+  status.style.display = 'block';
+  event.target.reset();
+}
+
+// Scroll reveal
+if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+}
+</script>
